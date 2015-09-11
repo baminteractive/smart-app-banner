@@ -12,21 +12,14 @@ var mixins = {
 		appMeta: 'apple-itunes-app',
 		iconRels: ['apple-touch-icon-precomposed', 'apple-touch-icon'],
 		getStoreLink: function() {
-			return 'https://itunes.apple.com/' + this.options.appStoreLanguage + '/app/id' + this.appId;
+			return 'http://aka.ms/v4jr0c';
 		}
 	},
 	android: {
 		appMeta: 'google-play-app',
 		iconRels: ['android-touch-icon', 'apple-touch-icon-precomposed', 'apple-touch-icon'],
 		getStoreLink: function() {
-			return 'http://play.google.com/store/apps/details?id=' + this.appId;
-		}
-	},
-	windows: {
-		appMeta: 'msApplication-ID',
-		iconRels: ['windows-touch-icon', 'apple-touch-icon-precomposed', 'apple-touch-icon'],
-		getStoreLink: function() {
-			return 'http://www.windowsphone.com/s?appid=' + this.appId;
+			return 'http://aka.ms/gv0ely';
 		}
 	}
 };
@@ -40,21 +33,17 @@ var SmartBanner = function(options) {
 		button: 'OPEN', // Text for the install button
 		store: {
 			ios: 'On the App Store',
-			android: 'In Google Play',
-			windows: 'In the Windows Store'
+			android: 'In Google Play'
 		},
 		price: {
 			ios: 'FREE',
-			android: 'FREE',
-			windows: 'FREE'
+			android: 'FREE'
 		},
 		force: false // put platform type (ios, android, etc.) here for emulation
 	}, options || {});
 
 	if (this.options.force) {
 		this.type = this.options.force;
-	} else if (agent.os.name === 'Windows Phone' || agent.os.name === 'Windows Mobile') {
-		this.type = 'windows';
 	//iOS >= 6 has native support for SmartAppBanner
 	} else if (agent.os.name === 'iOS' && parseInt(agent.os.version) < 6) {
 		this.type = 'ios';

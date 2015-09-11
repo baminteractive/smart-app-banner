@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <title>MyPage</title>
+
+    <meta name="apple-itunes-app" content="app-id=502838820">
+    <meta name="google-play-app" content="app-id=ru.hh.android">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="smart-app-banner.css" type="text/css" media="screen">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="android-touch-icon" href="android-icon.png" />
+  </head>
+  <body>
+    ...
+    <script src="smart-app-banner.js"></script>
+    <script type="text/javascript">
+      new SmartBanner({
+          daysHidden: 15,   // days to hide banner after close button is clicked (defaults to 15)
+          daysReminder: 90, // days to hide banner after "VIEW" button is clicked (defaults to 90)
+          appStoreLanguage: 'us', // language code for the App Store (defaults to user's browser language)
+          title: 'Outlook',
+          author: 'Microsoft',
+          button: 'View',
+          store: {
+              ios: 'On the App Store',
+              android: 'In Google Play'
+          },
+          price: {
+              ios: 'FREE',
+              android: 'GET'
+          }
+          // , force: 'ios' // Uncomment for platform emulation
+      });
+    </script>
+  </body>
+</html>
