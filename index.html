@@ -2,8 +2,6 @@
   <head>
     <title>MyPage</title>
 
-    <meta name="apple-itunes-app" content="app-id=502838820">
-    <meta name="google-play-app" content="app-id=ru.hh.android">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="smart-app-banner.css" type="text/css" media="screen">
@@ -12,7 +10,13 @@
   </head>
   <body>
     ...
+    <script>
+    var outlookCom = outlookCom || {};
+    outlookCom.iOSUrl = 'http://aka.ms/v4v4v4';
+    outlookCom.androidUrl = 'http://aka.ms/gvgvgv';
+  </script>
     <script src="smart-app-banner.js"></script>
+
     <script type="text/javascript">
       new SmartBanner({
           daysHidden: 15,   // days to hide banner after close button is clicked (defaults to 15)
@@ -32,5 +36,6 @@
           // , force: 'ios' // Uncomment for platform emulation
       });
     </script>
+
   </body>
 </html>

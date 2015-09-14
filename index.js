@@ -5,21 +5,21 @@ var root = doc && doc.documentElement;
 var cookie = require('cookie-cutter');
 var ua = require('ua-parser-js');
 var userLang = navigator.language.slice(-2) || navigator.userLanguage.slice(-2) || 'us';
+var iosUrl = outlookCom.iOSUrl;
+var andUrl = outlookCom.androidUrl;
 
 // platform dependent functionality
 var mixins = {
 	ios: {
-		appMeta: 'apple-itunes-app',
 		iconRels: ['apple-touch-icon-precomposed', 'apple-touch-icon'],
 		getStoreLink: function() {
-			return 'http://aka.ms/v4jr0c';
+			return iosUrl;
 		}
 	},
 	android: {
-		appMeta: 'google-play-app',
 		iconRels: ['android-touch-icon', 'apple-touch-icon-precomposed', 'apple-touch-icon'],
 		getStoreLink: function() {
-			return 'http://aka.ms/gv0ely';
+			return andUrl;
 		}
 	}
 };
@@ -45,7 +45,7 @@ var SmartBanner = function(options) {
 	if (this.options.force) {
 		this.type = this.options.force;
 	//iOS >= 6 has native support for SmartAppBanner
-	} else if (agent.os.name === 'iOS' && parseInt(agent.os.version) < 6) {
+	} else if (agent.os.name === 'iOS') {
 		this.type = 'ios';
 	} else if (agent.os.name === 'Android') {
 		this.type = 'android';
@@ -60,10 +60,6 @@ var SmartBanner = function(options) {
 	}
 
 	extend(this, mixins[this.type]);
-
-	if (!this.parseAppId()) {
-		return;
-	}
 
 	this.create();
 	this.show();
@@ -133,20 +129,6 @@ SmartBanner.prototype = {
 			path: '/',
 			expires: +new Date() + this.options.daysReminder * 1000 * 60 * 60 * 24
 		});
-	},
-	parseAppId: function() {
-		var meta = q('meta[name="' + this.appMeta + '"]');
-		if (!meta) {
-			return;
-		}
-
-		if (this.type === 'windows') {
-			this.appId = meta.getAttribute('content');
-		} else {
-			this.appId = /app-id=([^\s,]+)/.exec(meta.getAttribute('content'))[1];
-		}
-
-		return this.appId;
 	}
 };
 
