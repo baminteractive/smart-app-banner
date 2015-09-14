@@ -84,14 +84,14 @@ SmartBanner.prototype = {
 		sb.className = 'smartbanner smartbanner-' + this.type;
 
 		sb.innerHTML = '<div class="smartbanner-container">' +
-							'<a href="javascript:void(0);" class="smartbanner-close">&times;</a>' +
+							'<a href="javascript:void(0);" class="smartbanner-close" data-atlas="smartbanner close">&times;</a>' +
 							'<span class="smartbanner-icon" style="background-image: url('+icon+')"></span>' +
 							'<div class="smartbanner-info">' +
 								'<div class="smartbanner-title">'+this.options.title+'</div>' +
 								'<div>'+this.options.author+'</div>' +
 								'<span>'+inStore+'</span>' +
 							'</div>' +
-							'<a href="'+link+'" class="smartbanner-button">' +
+							'<a href="'+link+'" class="smartbanner-button" data-atlas="smartbanner view">' +
 								'<span class="smartbanner-button-text">'+this.options.button+'</span>' +
 							'</a>' +
 						'</div>';
