@@ -7,27 +7,37 @@ var ua = require('ua-parser-js');
 var userLang = navigator.language.slice(-2) || navigator.userLanguage.slice(-2) || 'us';
 var iosUrl = outlookCom.iOSUrl;
 var andUrl = outlookCom.androidUrl;
-var bannerShow = true;
 
 // platform dependent functionality
 var mixins = {
 	ios: {
+		//appMeta: 'apple-itunes-app',
 		iconRels: ['apple-touch-icon-precomposed', 'apple-touch-icon'],
 		getStoreLink: function() {
+			//return 'https://itunes.apple.com/' + this.options.appStoreLanguage + '/app/id' + this.appId;
 			return iosUrl;
 		}
 	},
 	android: {
+		//appMeta: 'google-play-app',
 		iconRels: ['android-touch-icon', 'apple-touch-icon-precomposed', 'apple-touch-icon'],
 		getStoreLink: function() {
 			return andUrl;
+			//return 'http://play.google.com/store/apps/details?id=' + this.appId;
+		}		
+	},		
+	windows: {		
+		appMeta: 'msApplication-ID',		
+		iconRels: ['windows-touch-icon', 'apple-touch-icon-precomposed', 'apple-touch-icon'],		
+		getStoreLink: function() {		
+			return 'http://www.windowsphone.com/s?appid=' + this.appId;
 		}
 	}
 };
 
 var SmartBanner = function(options) {
 	var agent = ua(navigator.userAgent);
-	bannerShow = outlookCom.showBanner;
+
 	this.options = extend({}, {
 		daysHidden: 15,
 		daysReminder: 90,
@@ -35,11 +45,13 @@ var SmartBanner = function(options) {
 		button: 'OPEN', // Text for the install button
 		store: {
 			ios: 'On the App Store',
-			android: 'In Google Play'
+			android: 'In Google Play',
+			windows: 'In the Windows Store'
 		},
 		price: {
 			ios: 'FREE',
-			android: 'FREE'
+			android: 'FREE',
+			windows: 'FREE'
 		},
 		url: {
 			ios: 'https://itunes.apple.com/us/genre/ios-productivity/id6007?mt=8',
@@ -50,6 +62,8 @@ var SmartBanner = function(options) {
 
 	if (this.options.force) {
 		this.type = this.options.force;
+	// } else if (agent.os.name === 'Windows Phone' || agent.os.name === 'Windows Mobile') {		
+	// 	this.type = 'windows';
 	//iOS >= 6 has native support for SmartAppBanner
 	} else if (agent.os.name === 'iOS') {
 		this.type = 'ios';
@@ -61,11 +75,14 @@ var SmartBanner = function(options) {
 	if (!this.type
 		|| navigator.standalone
 		|| cookie.get('smartbanner-closed')
-		|| cookie.get('smartbanner-installed')
-		|| !bannerShow) {
+		|| cookie.get('smartbanner-installed')) {
 		return;
 	}
 	extend(this, mixins[this.type]);
+
+	// if (!this.parseAppId()) {
+	// 	return;		
+	// }
 
 	this.create();
 	this.show();
@@ -90,14 +107,14 @@ SmartBanner.prototype = {
 		sb.className = 'smartbanner smartbanner-' + this.type;
 
 		sb.innerHTML = '<div class="smartbanner-container">' +
-							'<a href="javascript:void(0);" class="smartbanner-close" data-atlas="smartbanner close">&times;</a>' +
+							'<a href="javascript:void(0);" class="smartbanner-close">&times;</a>' +
 							'<span class="smartbanner-icon" style="background-image: url('+icon+')"></span>' +
 							'<div class="smartbanner-info">' +
 								'<div class="smartbanner-title">'+this.options.title+'</div>' +
 								'<div>'+this.options.author+'</div>' +
 								'<span>'+inStore+'</span>' +
 							'</div>' +
-							'<a href="'+link+'" class="smartbanner-button" data-atlas="smartbanner view">' +
+							'<a href="'+link+'" class="smartbanner-button">' +
 								'<span class="smartbanner-button-text">'+this.options.button+'</span>' +
 							'</a>' +
 						'</div>';
@@ -135,6 +152,20 @@ SmartBanner.prototype = {
 			path: '/',
 			expires: +new Date() + this.options.daysReminder * 1000 * 60 * 60 * 24
 		});
+	},
+	parseAppId: function() {		
+		var meta = q('meta[name="' + this.appMeta + '"]');		
+		if (!meta) {		
+			return;		
+		}		
+		
+		if (this.type === 'windows') {		
+			this.appId = meta.getAttribute('content');		
+		} else {		
+			this.appId = /app-id=([^\s,]+)/.exec(meta.getAttribute('content'))[1];		
+		}		
+		
+		return this.appId;
 	}
 };
 

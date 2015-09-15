@@ -27,6 +27,13 @@
 	}
 </style>
 
+
+<script>
+	var outlookCom = outlookCom || {};
+	outlookCom.iOSUrl = 'http://aka.ms/v4v4v4';
+	outlookCom.androidUrl = 'http://aka.ms/gvgvgv';
+	// outlookCom.showBanner = true;
+</script>
 <script type="text/javascript" src="../smart-app-banner.js"></script>
 
 
@@ -44,6 +51,18 @@
 				title: 'KudaGo',
 				author: 'KudaGo Inc',
 				button: 'OPEN',
+				store: {
+	            	ios: 'On the App Store',
+	            	android: 'In Google Play'
+		        },
+		        price: {
+		            ios: 'FREE',
+		            android: 'GET'
+	        	},
+		        url: {
+		        	ios: 'http://itunes.apple.com',
+		        	android: 'http://play.google.com'
+		        },
 				force: force
 		});
 	};
