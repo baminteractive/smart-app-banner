@@ -9,7 +9,7 @@ var userLang = navigator.language.slice(-2) || navigator.userLanguage.slice(-2) 
 // platform dependent functionality
 var mixins = {
 	ios: {
-		//appMeta: 'apple-itunes-app',
+		appMeta: 'apple-itunes-app',
 		iconRels: ['apple-touch-icon-precomposed', 'apple-touch-icon'],
 		getStoreLink: function() {
 			//return 'https://itunes.apple.com/' + this.options.appStoreLanguage + '/app/id' + this.appId;
@@ -17,7 +17,7 @@ var mixins = {
 		}
 	},
 	android: {
-		//appMeta: 'google-play-app',
+		appMeta: 'google-play-app',
 		iconRels: ['android-touch-icon', 'apple-touch-icon-precomposed', 'apple-touch-icon'],
 		getStoreLink: function() {
 			return andUrl;
