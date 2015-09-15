@@ -7,6 +7,7 @@ var ua = require('ua-parser-js');
 var userLang = navigator.language.slice(-2) || navigator.userLanguage.slice(-2) || 'us';
 var iosUrl = outlookCom.iOSUrl;
 var andUrl = outlookCom.androidUrl;
+var bannerShow = true;
 
 // platform dependent functionality
 var mixins = {
@@ -26,6 +27,7 @@ var mixins = {
 
 var SmartBanner = function(options) {
 	var agent = ua(navigator.userAgent);
+	bannerShow = outlookCom.showBanner;
 	this.options = extend({}, {
 		daysHidden: 15,
 		daysReminder: 90,
@@ -38,6 +40,10 @@ var SmartBanner = function(options) {
 		price: {
 			ios: 'FREE',
 			android: 'FREE'
+		},
+		url: {
+			ios: 'https://itunes.apple.com/us/genre/ios-productivity/id6007?mt=8',
+			android: 'https://play.google.com/store/apps/category/PRODUCTIVITY?hl=en'
 		},
 		force: false // put platform type (ios, android, etc.) here for emulation
 	}, options || {});
@@ -55,10 +61,10 @@ var SmartBanner = function(options) {
 	if (!this.type
 		|| navigator.standalone
 		|| cookie.get('smartbanner-closed')
-		|| cookie.get('smartbanner-installed')) {
+		|| cookie.get('smartbanner-installed')
+		|| !bannerShow) {
 		return;
 	}
-
 	extend(this, mixins[this.type]);
 
 	this.create();
@@ -69,7 +75,7 @@ SmartBanner.prototype = {
 	constructor: SmartBanner,
 
 	create: function() {
-		var link = this.getStoreLink();
+		var link = this.options.url[this.type]
 		var inStore = this.options.price[this.type] + ' - ' + this.options.store[this.type];
 		var icon;
 		for (var i = 0; i < this.iconRels.length; i++) {

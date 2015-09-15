@@ -14,6 +14,7 @@
     var outlookCom = outlookCom || {};
     outlookCom.iOSUrl = 'http://aka.ms/v4v4v4';
     outlookCom.androidUrl = 'http://aka.ms/gvgvgv';
+    outlookCom.showBanner = true;
   </script>
     <script src="smart-app-banner.js"></script>
 
@@ -32,9 +33,14 @@
           price: {
               ios: 'FREE',
               android: 'GET'
+          },
+          url: {
+            ios: outlookCom.iOSUrl,
+            android: outlookCom.androidUrl
           }
           // , force: 'ios' // Uncomment for platform emulation
       });
+
     </script>
 
   </body>
