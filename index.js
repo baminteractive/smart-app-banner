@@ -22,12 +22,12 @@ var mixins = {
 		getStoreLink: function() {
 			return andUrl;
 			//return 'http://play.google.com/store/apps/details?id=' + this.appId;
-		}		
-	},		
-	windows: {		
-		appMeta: 'msApplication-ID',		
-		iconRels: ['windows-touch-icon', 'apple-touch-icon-precomposed', 'apple-touch-icon'],		
-		getStoreLink: function() {		
+		}
+	},
+	windows: {
+		appMeta: 'msApplication-ID',
+		iconRels: ['windows-touch-icon', 'apple-touch-icon-precomposed', 'apple-touch-icon'],
+		getStoreLink: function() {
 			return 'http://www.windowsphone.com/s?appid=' + this.appId;
 		}
 	}
@@ -60,7 +60,7 @@ var SmartBanner = function(options) {
 
 	if (this.options.force) {
 		this.type = this.options.force;
-	// } else if (agent.os.name === 'Windows Phone' || agent.os.name === 'Windows Mobile') {		
+	// } else if (agent.os.name === 'Windows Phone' || agent.os.name === 'Windows Mobile') {
 	// 	this.type = 'windows';
 	//iOS >= 6 has native support for SmartAppBanner
 	} else if (agent.os.name === 'iOS') {
@@ -79,7 +79,7 @@ var SmartBanner = function(options) {
 	extend(this, mixins[this.type]);
 
 	// if (!this.parseAppId()) {
-	// 	return;		
+	// 	return;
 	// }
 
 	this.create();
@@ -91,7 +91,7 @@ SmartBanner.prototype = {
 
 	create: function() {
 		var link = this.options.url[this.type]
-		var inStore = this.options.price[this.type] + ' - ' + this.options.store[this.type];
+		var inStore = this.options.price[this.type] + ' &mdash; ' + this.options.store[this.type];
 		var icon;
 		for (var i = 0; i < this.iconRels.length; i++) {
 			var rel = q('link[rel="'+this.iconRels[i]+'"]');
@@ -151,18 +151,18 @@ SmartBanner.prototype = {
 			expires: +new Date() + this.options.daysReminder * 1000 * 60 * 60 * 24
 		});
 	},
-	parseAppId: function() {		
-		var meta = q('meta[name="' + this.appMeta + '"]');		
-		if (!meta) {		
-			return;		
-		}		
-		
-		if (this.type === 'windows') {		
-			this.appId = meta.getAttribute('content');		
-		} else {		
-			this.appId = /app-id=([^\s,]+)/.exec(meta.getAttribute('content'))[1];		
-		}		
-		
+	parseAppId: function() {
+		var meta = q('meta[name="' + this.appMeta + '"]');
+		if (!meta) {
+			return;
+		}
+
+		if (this.type === 'windows') {
+			this.appId = meta.getAttribute('content');
+		} else {
+			this.appId = /app-id=([^\s,]+)/.exec(meta.getAttribute('content'))[1];
+		}
+
 		return this.appId;
 	}
 };
