@@ -5,37 +5,41 @@ var doc = require('get-doc');
 var root = doc && doc.documentElement;
 var cookie = require('cookie-cutter');
 var ua = require('ua-parser-js');
-var userLang = navigator.language.slice(-2) || navigator.userLanguage.slice(-2) || 'us';
 
 // platform dependent functionality
 var mixins = {
 	ios: {
 		appMeta: 'apple-itunes-app',
-		iconRels: ['apple-touch-icon-precomposed', 'apple-touch-icon'],
-		getStoreLink: function() {
-			//return 'https://itunes.apple.com/' + this.options.appStoreLanguage + '/app/id' + this.appId;
-			return iosUrl;
-		}
+		iconRels: ['apple-touch-icon-precomposed', 'apple-touch-icon']
 	},
 	android: {
 		appMeta: 'google-play-app',
-		iconRels: ['android-touch-icon', 'apple-touch-icon-precomposed', 'apple-touch-icon'],
-		getStoreLink: function() {
-			return andUrl;
-			//return 'http://play.google.com/store/apps/details?id=' + this.appId;
-		}
+		iconRels: ['android-touch-icon', 'apple-touch-icon-precomposed', 'apple-touch-icon']
 	},
 	windows: {
 		appMeta: 'msApplication-ID',
-		iconRels: ['windows-touch-icon', 'apple-touch-icon-precomposed', 'apple-touch-icon'],
-		getStoreLink: function() {
-			return 'http://www.windowsphone.com/s?appid=' + this.appId;
-		}
+		iconRels: ['windows-touch-icon', 'apple-touch-icon-precomposed', 'apple-touch-icon']
 	}
 };
 
 var SmartBanner = function(options) {
 	var agent = ua(navigator.userAgent);
+  var userLang;
+
+  function getLanguage(){
+    var language = 'us';
+
+    if(navigator.language){
+      language = navigator.language.slice(-2);
+    } else if(navigator.userLanguage) {
+      language = navigator.userLanguage.slice(-2);
+    }
+
+    return language;
+
+  }
+
+  userLang = getLanguage();
 
 	this.options = extend({}, {
 		daysHidden: 15,
@@ -71,10 +75,10 @@ var SmartBanner = function(options) {
 	}
 
 	// Don't show banner if device isn't iOS or Android, website is loaded in app, user dismissed banner, or we have no app id in meta
-	if (!this.type
-		|| navigator.standalone
-		|| cookie.get('smartbanner-closed')
-		|| cookie.get('smartbanner-installed')) {
+	if (!this.type ||
+      navigator.standalone ||
+      cookie.get('smartbanner-closed') ||
+      cookie.get('smartbanner-installed')) {
 		return;
 	}
 	extend(this, mixins[this.type]);
@@ -91,7 +95,7 @@ SmartBanner.prototype = {
 	constructor: SmartBanner,
 
 	create: function() {
-		var link = this.options.url[this.type]
+		var link = this.options.url[this.type];
 		var inStore = this.options.price[this.type] + ' &mdash; ' + this.options.store[this.type];
 		var icon;
 		for (var i = 0; i < this.iconRels.length; i++) {
